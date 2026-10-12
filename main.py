@@ -4,13 +4,14 @@ import pygame, random, math
 async def main():
     pygame.init()
 
-    font = pygame.font.SysFont("Arial", 24)
+    font = pygame.font.Font(None, 24)
     screenx = 1200
     screeny = 800
     screen = pygame.display.set_mode((screenx, screeny))
 
     clock = pygame.time.Clock()
     running = True
+    gameOver = False
 
 
     ship_pos = pygame.math.Vector2(screenx/2,screeny/2)
@@ -214,7 +215,7 @@ async def main():
             m.update()
             if ship_collision(m):
                 print(f"Score: {score}")
-                running = False
+                gameOver = True
                 
 
         if pressed[pygame.K_w]:
@@ -236,7 +237,7 @@ async def main():
         for a in asteroids[:]:
             if ship_collision(a):
                 print(f"Score: {score}")
-                running = False
+                gameOver = True
 
         if enemy_cd>0:
             enemy_cd -= 1
@@ -283,13 +284,13 @@ async def main():
         score_text = font.render(f"Score: {score}",True,(255,255,255))
         screen.blit(score_text, (20,20))
 
-        pygame.display.flip()
+        if gameOver == False:
+            pygame.display.flip()
 
         # Frame Rate & Cleanup
         clock.tick(60)
+        await asyncio.sleep(0)
 
     pygame.quit()
-
-    await asyncio.sleep(0)
 
 asyncio.run(main())
